@@ -9,16 +9,19 @@ import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BookController {
-    Map<UUID,Book> bookMap;
+
+    Map<UUID, Book> bookMap;
     BookService bookService;
+
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
-        bookMap = new HashMap<UUID,Book>();
+        bookMap = new HashMap<UUID, Book>();
 
         Book book = new Book();
         book.setUuid(UUID.randomUUID());
@@ -33,18 +36,31 @@ public class BookController {
         Book book3 = new Book();
         book3.setUuid(UUID.randomUUID());
         book3.setAuthor("Antoine de Saint-Exupery");
-        book3.setTitle("El principito");
+        book3.setTitle("principito");
 
-        bookMap.put(book.getUuid(),book);
-        bookMap.put(book2.getUuid(),book2);
-        bookMap.put(book3.getUuid(),book3);
+        bookMap.put(book.getUuid(), book);
+        bookMap.put(book2.getUuid(), book2);
+        bookMap.put(book3.getUuid(), book3);
     }
-    
-    
+
     @GetMapping("/api/v1/book")
-    public List<Book> getAllBooks(){
-        
-        return new ArrayList<>(bookMap.values());
+    public List<Book> getAllBooks() {
+
+        return new ArrayList<Book>(bookMap.values());
     }
-    
+
+    @GetMapping("/api/v1/search-book")
+    public Book searchBook(@RequestParam("title") String title) {
+        
+        List<Book> books = new ArrayList<Book>(bookMap.values());
+        Book bookEncontrado = null;
+        bookEncontrado = new ArrayList<Book>(bookMap.values()).stream()
+                .filter(book -> book.getTitle().equals(title))
+                .findFirst()
+                .orElse(null);
+
+        return bookEncontrado;
+
+    }
+
 }
