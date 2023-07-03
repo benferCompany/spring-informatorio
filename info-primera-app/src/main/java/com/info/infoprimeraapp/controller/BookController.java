@@ -2,64 +2,69 @@ package com.info.infoprimeraapp.controller;
 
 import com.info.infoprimeraapp.domain.Book;
 import com.info.infoprimeraapp.service.BookService;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BookController {
 
-    Map<UUID, Book> bookMap;
     BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
-        bookMap = new HashMap<UUID, Book>();
 
-        Book book = new Book();
-        book.setUuid(UUID.randomUUID());
-        book.setAuthor("Gabriel Garcia Marquez");
-        book.setTitle("Cien años de soledad");
-
-        Book book2 = new Book();
-        book2.setUuid(UUID.randomUUID());
-        book2.setAuthor("George Orwell");
-        book2.setTitle("1984");
-
-        Book book3 = new Book();
-        book3.setUuid(UUID.randomUUID());
-        book3.setAuthor("Antoine de Saint-Exupery");
-        book3.setTitle("principito");
-
-        bookMap.put(book.getUuid(), book);
-        bookMap.put(book2.getUuid(), book2);
-        bookMap.put(book3.getUuid(), book3);
     }
 
     @GetMapping("/api/v1/book")
     public List<Book> getAllBooks() {
 
-        return new ArrayList<Book>(bookMap.values());
+        return bookService.getAllBooks();
     }
 
     @GetMapping("/api/v1/search-book")
     public Book searchBook(@RequestParam("title") String title) {
-        
-        List<Book> books = new ArrayList<Book>(bookMap.values());
-        Book bookEncontrado = null;
-        bookEncontrado = new ArrayList<Book>(bookMap.values()).stream()
-                .filter(book -> book.getTitle().equals(title))
-                .findFirst()
-                .orElse(null);
 
-        return bookEncontrado;
+        return bookService.searchBook(title);
+
+    }
+
+    @PostMapping("/api/v1/create-book")
+    public Book createBook(@RequestBody Book book) {
+        bookService.createBook(book);
+        
+        return book;
+    }
+
+    @DeleteMapping("/api/v1/delete-book/{uuid}")
+    public String deleteBook(@PathVariable("uuid") UUID uuid) {
+
+        boolean deleted = bookService.deleteBook(uuid);
+
+        if (deleted) {
+            return "Libro eliminado correctamente";
+        } else {
+            return "no se encontro";
+        }
+    }
+
+    @PutMapping("/api/v1/update-book")
+    public String updateBook(@RequestBody Book book) {
+        boolean update = bookService.updateBook(book);
+        if (update) {
+            return "Exitoso.";
+        }else{
+            return "Algo salio mal.";
+        }
 
     }
 
