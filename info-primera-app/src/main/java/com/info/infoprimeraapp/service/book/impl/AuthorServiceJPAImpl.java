@@ -1,4 +1,4 @@
-package com.info.infoprimeraapp.service.impl;
+package com.info.infoprimeraapp.service.book.impl;
 
 import com.info.infoprimeraapp.domain.Author;
 import com.info.infoprimeraapp.repository.book.AuthorRepository;

@@ -2,18 +2,12 @@ package com.info.infoprimeraapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
@@ -24,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long uuid;
     
     @Column(length = 40, columnDefinition = "varchar(40)", updatable = true, nullable = false)

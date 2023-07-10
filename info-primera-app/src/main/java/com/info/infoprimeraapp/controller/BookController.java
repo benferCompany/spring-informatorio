@@ -1,7 +1,7 @@
 package com.info.infoprimeraapp.controller;
 
 import com.info.infoprimeraapp.domain.Book;
-import com.info.infoprimeraapp.service.BookService;
+import com.info.infoprimeraapp.service.book.BookService;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;

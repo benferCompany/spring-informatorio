@@ -1,52 +1,33 @@
-package com.info.infoprimeraapp.service.impl;
+package com.info.infoprimeraapp.service.book.impl;
 
 import com.info.infoprimeraapp.domain.Book;
-import com.info.infoprimeraapp.service.BookService;
+import com.info.infoprimeraapp.repository.book.BookRepository;
+import com.info.infoprimeraapp.service.book.BookService;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+
+@Primary
 @Service
-public class BookServiceImpl implements BookService {
+@AllArgsConstructor
+public class BookServiceJPAImpl implements BookService {
 
-    HashMap<UUID, Book> bookMap;
-
-    public BookServiceImpl() {
-        bookMap = new HashMap();
-
-        Book book = new Book();
-        book.setUuid(UUID.randomUUID());
-        book.setAuthor("Gabriel Garcia Marquez");
-        book.setTitle("Cien años de soledad");
-
-        Book book2 = new Book();
-        book2.setUuid(UUID.randomUUID());
-        book2.setAuthor("George Orwell");
-        book2.setTitle("1984");
-
-        Book book3 = new Book();
-        book3.setUuid(UUID.randomUUID());
-        book3.setAuthor("Antoine de Saint-Exupery");
-        book3.setTitle("principito");
-
-        bookMap.put(book.getUuid(), book);
-        bookMap.put(book2.getUuid(), book2);
-        bookMap.put(book3.getUuid(), book3);
-    }
+    private final BookRepository bookRepository;
 
     @Override
     public List<Book> getAllBooks() {
-
-        return new ArrayList<Book>(bookMap.values());
+        return bookRepository.findAll();
     }
 
     @Override
     public Book searchBook(String title) {
-        List<Book> books = new ArrayList<Book>(bookMap.values());
+        List<Book> books = bookRepository.findAll();
         Book bookEncontrado = null;
-        bookEncontrado = new ArrayList<Book>(bookMap.values()).stream()
+        bookEncontrado = books.stream()
                 .filter(book -> book.getTitle().equals(title))
                 .findFirst()
                 .orElse(null);
@@ -57,22 +38,20 @@ public class BookServiceImpl implements BookService {
     public boolean createBook(Book book) {
         try {
             book.setUuid(UUID.randomUUID());
-            bookMap.put(book.getUuid(), book);
+            bookRepository.save(book);
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-
     }
 
     @Override
     public boolean deleteBook(UUID uuid) {
-
         try {
             // Verifica si el libro existe en el HashMap
-            if (bookMap.containsKey(uuid)) {
-                bookMap.remove(uuid);
+            if (bookRepository.existsById(uuid)) {
+                bookRepository.deleteById(uuid);
                 return true;
             } else {
                 return false; // El libro no existe
@@ -88,8 +67,8 @@ public class BookServiceImpl implements BookService {
     public boolean updateBook(Book book) {
         try {
             // Verifica si el libro existe en el HashMap
-            if (bookMap.containsKey(book.getUuid())) {
-                bookMap.put(book.getUuid(), book);
+            if (bookRepository.existsById(book.getUuid())) {
+                bookRepository.save(book);
                 return true;
             } else {
                 return false; // El libro no existe
@@ -99,7 +78,7 @@ public class BookServiceImpl implements BookService {
             e.printStackTrace();
             return false;
         }
-        
+
     }
 
 }
