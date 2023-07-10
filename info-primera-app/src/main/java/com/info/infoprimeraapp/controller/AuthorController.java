@@ -44,8 +44,8 @@ public class AuthorController {
         return authorService.searchAuthor(name);
     }
     
-    @DeleteMapping("/delete/{uuid}")
-    public String deleteAuthor(@PathVariable("uuid") Long uuid) {
+    @DeleteMapping("/{uuid}")
+    public String deleteAuthor(@PathVariable("uuid") UUID uuid) {
 
         boolean deleted = authorService.deleteAuthor(uuid);
 
