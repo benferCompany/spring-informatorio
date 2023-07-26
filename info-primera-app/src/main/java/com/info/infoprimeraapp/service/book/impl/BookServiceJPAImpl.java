@@ -5,6 +5,7 @@ import com.info.infoprimeraapp.repository.book.BookRepository;
 import com.info.infoprimeraapp.service.book.BookService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -35,14 +36,14 @@ public class BookServiceJPAImpl implements BookService {
     }
 
     @Override
-    public boolean createBook(Book book) {
+    public Book createBook(Book book) {
         try {
             book.setUuid(UUID.randomUUID());
-            bookRepository.save(book);
-            return true;
+
+            return bookRepository.save(book);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
     }
 
@@ -80,5 +81,12 @@ public class BookServiceJPAImpl implements BookService {
         }
 
     }
+
+    @Override
+    public Optional<Book> getBookById(UUID uuid){
+        return Optional.of(bookRepository.findById(uuid).orElse(null));
+    }
+
+
 
 }

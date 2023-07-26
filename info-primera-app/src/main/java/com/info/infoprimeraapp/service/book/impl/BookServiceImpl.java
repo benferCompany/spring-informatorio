@@ -2,10 +2,9 @@ package com.info.infoprimeraapp.service.book.impl;
 
 import com.info.infoprimeraapp.domain.Book;
 import com.info.infoprimeraapp.service.book.BookService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,14 +53,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean createBook(Book book) {
+    public Book createBook(Book book) {
         try {
             book.setUuid(UUID.randomUUID());
             bookMap.put(book.getUuid(), book);
-            return true;
+            return book;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
 
     }
@@ -100,6 +99,11 @@ public class BookServiceImpl implements BookService {
             return false;
         }
         
+    }
+
+    @Override
+    public Optional<Book> getBookById(UUID uuid) {
+        return Optional.empty();
     }
 
 }

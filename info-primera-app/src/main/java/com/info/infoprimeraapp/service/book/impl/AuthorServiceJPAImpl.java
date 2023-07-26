@@ -46,7 +46,7 @@ public class AuthorServiceJPAImpl implements AuthorService {
     }
 
     @Override
-    public boolean deleteAuthor(Long uuid) {
+    public boolean deleteAuthor(UUID uuid) {
         try {
             // Verifica si el libro existe en el HashMap
             if (authorRepository.existsById(uuid)) {

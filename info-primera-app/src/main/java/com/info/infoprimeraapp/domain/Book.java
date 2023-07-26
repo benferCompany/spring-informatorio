@@ -28,7 +28,7 @@ public class Book {
     @Column(length = 100,columnDefinition = "varchar(100)",updatable = true,nullable = false)
     private String author;
 
-    @Column(unique = true)
+
     private String isbn;
 
     private int numberPages;
